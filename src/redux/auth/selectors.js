@@ -1,0 +1,8 @@
+export const selectAuthUser = (state) => state.auth.user;
+export const selectAuthUserAvatar = (state) => state.auth.user.avatarUrl;
+export const selectAuthUserCurrency = (state) => state.auth.user.currency;
+export const selectAuthAccessToken = (state) => state.auth.tokens.accessToken;
+export const selectAuthIsLoading = (state) => state.auth.isLoading;
+export const selectAuthIsError = (state) => state.auth.isError;
+export const selectAuthIsRefreshing = (state) => state.auth.isRefreshing;
+export const selectAuthUserIsLoggedIn = (state) => state.auth.isLoggedIn;

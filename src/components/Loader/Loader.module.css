@@ -1,0 +1,38 @@
+.backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+/* Mobile Small (320px) */
+@media screen and (max-width: 320px) {
+    .backdrop {
+        backdrop-filter: blur(2px);
+    }
+}
+
+/* Mobile Medium (375px) */
+@media screen and (min-width: 321px) and (max-width: 375px) {
+    .backdrop {
+        backdrop-filter: blur(3px);
+    }
+}
+
+/* Tablet (768px) */
+@media screen and (min-width: 376px) and (max-width: 768px) {
+    .backdrop {
+        backdrop-filter: blur(4px);
+    }
+}
+
+/* Laptop and larger */
+@media screen and (min-width: 769px) {
+    .backdrop {
+        backdrop-filter: blur(4px);
+    }
+}
