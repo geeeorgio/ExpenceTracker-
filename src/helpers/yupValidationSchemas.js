@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import { parseISO, isValid, isFuture, startOfDay } from "date-fns";
 
 // Registration Form
 
@@ -49,4 +50,66 @@ export const loginSchema = Yup.object({
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/,
       "Password must contain uppercase, lowercase, number, and special character"
     ),
+});
+
+// Transaction Form
+export const transactionValues = {
+  transactionType: "",
+  date: "",
+  time: "",
+  category: "",
+  sum: "",
+  comment: "",
+};
+
+export const transactionFormSchema = Yup.object().shape({
+  transactionType: Yup.string()
+    .required("Transaction type is required")
+    .oneOf(["incomes", "expenses"]),
+
+  date: Yup.string()
+    .required("Date is required")
+    .test("is-valid-date", "Invalid date", function (value) {
+      if (!value) return true;
+      const parsedDate = parseISO(value);
+      return (
+        isValid(parsedDate) || this.createError({ message: "Invalid date" })
+      );
+    })
+    .test(
+      "is-not-future-date",
+      "Date cannot be in the future",
+      function (value) {
+        if (!value) return true;
+        const parsedDate = parseISO(value);
+        return (
+          !isFuture(startOfDay(parsedDate)) ||
+          this.createError({ message: "Date cannot be in the future" })
+        );
+      }
+    ),
+
+  time: Yup.string()
+    .required("Time is required")
+    .matches(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (HH:MM)"),
+
+  category: Yup.string()
+    .required("Category is required")
+    .min(1, "Category cannot be empty"),
+
+  sum: Yup.number()
+    .required("Amount is required")
+    .typeError("Amount must be a number")
+    .positive("Amount must be positive")
+    .max(1_000_000_000, "Amount is too large")
+    .test(
+      "two-decimal-places",
+      "Amount can have up to two decimal places",
+      (value) => {
+        if (value === null || value === undefined) return true;
+        return /^\d+(\.\d{1,2})?$/.test(value.toString());
+      }
+    ),
+
+  comment: Yup.string().max(255, "Comment cannot exceed 255 characters"),
 });

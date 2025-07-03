@@ -1,14 +1,20 @@
 import { Link } from "react-router-dom";
+import logoLight from "../../../assets/favicon-light.svg";
+import logoDark from "../../../assets/favicon-dark.svg";
 
-const Logo = () => {
+import s from "./Logo.module.css";
+
+const Logo = ({ userThemeMode }) => {
+  const logoTitle = "ExpenseTracker".toUpperCase();
+
   return (
-    <Link to={"/"}>
-      <span>
-        <svg>
-          <use href={"#"}></use>
-        </svg>
-      </span>
-      Expense Tracker
+    <Link to={"/"} className={s.logo}>
+      <img
+        className={s.logoImg}
+        src={userThemeMode === "light" ? logoDark : logoLight}
+        alt="Expense Tracker App Logo"
+      />
+      {logoTitle}
     </Link>
   );
 };

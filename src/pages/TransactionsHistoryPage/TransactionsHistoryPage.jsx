@@ -1,16 +1,18 @@
+import { useParams } from "react-router-dom";
 import TransactionsList from "../../components/Transactions/TransactionsList/TransactionsList";
 import TransactionsSearchTools from "../../components/Transactions/TransactionsSearchTools/TransactionsSearchTools";
 import TransactionsTotalAmount from "../../components/Transactions/TransactionsTotalAmount/TransactionsTotalAmount";
 import styles from "./TransactionsHistoryPage.module.css";
 
 const TransactionsHistoryPage = () => {
-  let type = "incomes";
+  const { type } = useParams();
+  console.log(type);
 
   return (
     <div className={styles.historyPage}>
       TransactionsHistoryPage
-      <h1>All {type}</h1>
-      {type ? (
+      <h1>All {type.charAt(0).toUpperCase + type.slice(1)}</h1>
+      {type === "expences" ? (
         <p>
           View and manage every transaction seamlessly! Your entire financial
           landscape, all in one place.
@@ -22,8 +24,8 @@ const TransactionsHistoryPage = () => {
         </p>
       )}
       <TransactionsTotalAmount />
-      <TransactionsSearchTools />
-      <TransactionsList />
+      <TransactionsSearchTools type={type} />
+      <TransactionsList type={type} />
     </div>
   );
 };

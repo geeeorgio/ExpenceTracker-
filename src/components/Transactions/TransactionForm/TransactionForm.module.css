@@ -1,1 +1,230 @@
- 
+ .formContainer {
+     max-width: 400px;
+
+     margin: 40px auto;
+
+     padding: 30px;
+     background-color: #ffffff;
+
+     border-radius: 12px;
+
+     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+
+
+     color: #333;
+
+ }
+
+
+ .formContainer h1 {
+     text-align: center;
+     color: #007bff;
+
+     margin-bottom: 30px;
+     font-size: 28px;
+     font-weight: 600;
+ }
+
+
+ .form {
+     display: flex;
+     flex-direction: column;
+     gap: 20px;
+
+ }
+
+ .label {
+     display: block;
+
+     margin-bottom: 8px;
+
+     font-size: 16px;
+     font-weight: 500;
+     color: #555;
+ }
+
+
+ .input,
+ .textArea {
+     width: 100%;
+     padding: 12px 15px;
+     border: 1px solid #ddd;
+     border-radius: 8px;
+     font-size: 16px;
+     box-sizing: border-box;
+
+     transition: border-color 0.3s ease, box-shadow 0.3s ease;
+ }
+
+ .input:focus,
+ .textArea:focus {
+     border-color: #007bff;
+     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+     outline: none;
+
+ }
+
+ .textArea {
+     width: 100%;
+     height: 80px;
+     resize: none;
+
+ }
+
+ .radioWrapper {
+     display: flex;
+     gap: 25px;
+
+     justify-content: center;
+
+     padding: 10px 0;
+     border-bottom: 1px solid #eee;
+
+     margin-bottom: 20px;
+ }
+
+ .radioLabel {
+     display: flex;
+     align-items: center;
+     font-size: 18px;
+     cursor: pointer;
+     color: #666;
+     transition: color 0.3s ease;
+ }
+
+ .radioLabel:hover {
+     color: #007bff;
+ }
+
+ .radioInput {
+     margin-right: 10px;
+
+     transform: scale(1.3);
+
+     cursor: pointer;
+ }
+
+
+ .dateWrapper {
+     display: flex;
+     gap: 20px;
+
+     align-items: flex-start;
+
+ }
+
+ .dateWrapper .label {
+     flex: 1;
+
+ }
+
+ /* Стили для обёртки DatePickerField */
+ .dateFieldWrapper {
+     flex: 1;
+
+     display: flex;
+
+     flex-direction: column;
+
+ }
+
+ .dateInput {
+     width: 100%;
+     padding: 12px 15px;
+     border: 1px solid #ddd;
+     border-radius: 8px;
+     font-size: 16px;
+     box-sizing: border-box;
+     transition: border-color 0.3s ease, box-shadow 0.3s ease;
+ }
+
+ .dateInput:focus {
+     border-color: #007bff;
+     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+     outline: none;
+ }
+
+
+ .time {
+     flex: 1;
+
+     padding: 12px 15px;
+     border: 1px solid #ddd;
+     border-radius: 8px;
+     font-size: 16px;
+     box-sizing: border-box;
+     transition: border-color 0.3s ease, box-shadow 0.3s ease;
+ }
+
+ .time:focus {
+     border-color: #007bff;
+     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+     outline: none;
+ }
+
+ .textInputsWrapper {
+     display: flex;
+     flex-direction: column;
+     gap: 20px;
+
+ }
+
+ .submitButton {
+     width: 100%;
+     padding: 15px;
+     background-color: #007bff;
+     /* Яркий синий фон */
+     color: white;
+     border: none;
+     border-radius: 8px;
+     font-size: 18px;
+     font-weight: 600;
+     cursor: pointer;
+     transition: background-color 0.3s ease, transform 0.2s ease;
+     margin-top: 20px;
+
+ }
+
+ .submitButton:hover {
+     background-color: #0056b3;
+
+     transform: translateY(-2px);
+
+ }
+
+ .submitButton:active {
+     transform: translateY(0);
+ }
+
+
+ .error {
+     color: #dc3545;
+
+     font-size: 14px;
+     margin-top: 5px;
+     margin-bottom: 10px;
+
+ }
+
+ .react-datepicker__header {
+     background-color: #f0f0f0;
+     border-bottom: 1px solid #ddd;
+     padding-top: 8px;
+ }
+
+ .react-datepicker__month-container {
+     padding: 10px;
+ }
+
+ .react-datepicker__day--selected,
+ .react-datepicker__day--keyboard-selected {
+     background-color: #007bff;
+     color: whitesmoke;
+     border-radius: 50%;
+ }
+
+ .react-datepicker__day:hover {
+     background-color: #e0e0e0;
+     border-radius: 50%;
+ }

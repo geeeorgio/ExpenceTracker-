@@ -19,12 +19,9 @@ function App() {
         <Route path="/" element={<WelcomePage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/transactions/:type" element={<MainTransactionsPage />} />
         <Route
-          path="/transactions:transactionsType"
-          element={<MainTransactionsPage />}
-        />
-        <Route
-          path="/transactions/history/:transactionType"
+          path="/transactions/history/:type"
           element={<TransactionsHistoryPage />}
         />
         <Route path="*" element={<Navigate to="/" />} />

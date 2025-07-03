@@ -1,15 +1,24 @@
-import styles from "./TransactionsTotalAmount.module.css";
+import { useSelector } from "react-redux";
+import {
+  selectAllExpenses,
+  selectAllIncome,
+} from "../../../redux/transactions/selectors";
+
+import s from "./TransactionsTotalAmount.module.css";
 
 const TransactionsTotalAmount = () => {
+  const totalIncome = useSelector(selectAllIncome);
+  const totalExpense = useSelector(selectAllExpenses);
+
   return (
-    <div className={styles.totalAmount}>
+    <div className={s.totalAmount}>
       <div>
         <p>Total Income</p>
-        <p>summ</p>
+        <p>{totalIncome || "00.000"}</p>
       </div>
       <div>
         <p>Total Expense</p>
-        <p>summ</p>
+        <p>{totalExpense || "00.000"}</p>
       </div>
     </div>
   );

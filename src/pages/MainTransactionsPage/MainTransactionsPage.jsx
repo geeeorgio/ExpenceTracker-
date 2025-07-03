@@ -1,11 +1,15 @@
+import { useParams } from "react-router-dom";
 import TransactionForm from "../../components/Transactions/TransactionForm/TransactionForm";
 import TransactionsChart from "../../components/Transactions/TransactionsChart/TransactionsChart";
 import TransactionsTotalAmount from "../../components/Transactions/TransactionsTotalAmount/TransactionsTotalAmount";
-import styles from "./MainTransactionsPage.module.css";
+import s from "./MainTransactionsPage.module.css";
 
 const MainTransactionsPage = () => {
+  const transactionType = useParams();
+  console.log(transactionType);
+
   return (
-    <div className={styles.mainTransactions}>
+    <div className={s.mainTransactions}>
       <h1>Expense Log</h1>
       <p>
         Capture and organize every penny spent with ease! A clear view of your

@@ -1,4 +1,11 @@
-/* Logo styles */
 .logo {
-    /* styles here */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+}
+
+.logoImg {
+    width: 20px;
+    height: 20px;
 }

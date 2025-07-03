@@ -1,5 +1,5 @@
-/* ===== Modern Normalize ===== */
 @import 'modern-normalize/modern-normalize.css';
+@import 'react-datepicker/dist/react-datepicker.css';
 
 /* ===== Custom Reset ===== */
 *,
@@ -80,9 +80,4 @@ td {
 /* ===== Buttons ===== */
 button {
   cursor: pointer;
-}
-
-/* ===== Utility ===== */
-.hidden {
-  display: none !important;
 }
