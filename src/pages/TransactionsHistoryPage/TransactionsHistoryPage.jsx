@@ -11,7 +11,7 @@ const TransactionsHistoryPage = () => {
   return (
     <div className={styles.historyPage}>
       TransactionsHistoryPage
-      <h1>All {type.charAt(0).toUpperCase + type.slice(1)}</h1>
+      <h1>All {() => type.charAt(0).toUpperCase + type.slice(1)}</h1>
       {type === "expences" ? (
         <p>
           View and manage every transaction seamlessly! Your entire financial

@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthForm from "../../components/Auth/AuthForm/AuthForm";
 import styles from "./RegisterPage.module.css";
 import { useDispatch } from "react-redux";
@@ -12,6 +12,7 @@ import {
 
 const RegisterPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleUserRegister = useCallback(
     async (values, actions) => {
@@ -19,11 +20,12 @@ const RegisterPage = () => {
         await dispatch(userRegister(values)).unwrap();
         toast.success(`Hello, ${values.name}! You registered successfully!`);
         actions.resetForm();
+        navigate("/transactions/expenses");
       } catch {
         toast.error("Something went wrong! Please try again one more time");
       }
     },
-    [dispatch]
+    [dispatch, navigate]
   );
 
   return (

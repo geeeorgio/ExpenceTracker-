@@ -54,16 +54,16 @@ export const loginSchema = Yup.object({
 
 // Transaction Form
 export const transactionValues = {
-  transactionType: "",
+  type: "",
   date: "",
-  time: "",
+  time: "00:00:00",
   category: "",
   sum: "",
   comment: "",
 };
 
 export const transactionFormSchema = Yup.object().shape({
-  transactionType: Yup.string()
+  type: Yup.string()
     .required("Transaction type is required")
     .oneOf(["incomes", "expenses"]),
 
@@ -95,7 +95,11 @@ export const transactionFormSchema = Yup.object().shape({
 
   category: Yup.string()
     .required("Category is required")
-    .min(1, "Category cannot be empty"),
+    .min(1, "Category cannot be empty")
+    .max(
+      16,
+      "Category length must be less than or equal to 16 characters long"
+    ),
 
   sum: Yup.number()
     .required("Amount is required")

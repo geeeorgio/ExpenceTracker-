@@ -6,10 +6,10 @@ const TransactionsHistoryNav = () => {
     <nav className={styles.nav}>
       <ul>
         <li>
-          <NavLink to="/transactions/expenses">All Expense</NavLink>
+          <NavLink to="/transactions/history/expenses">All Expense</NavLink>
         </li>
         <li>
-          <NavLink to="/transactions/incomes">All Income</NavLink>
+          <NavLink to="/transactions/history/incomes">All Income</NavLink>
         </li>
       </ul>
     </nav>

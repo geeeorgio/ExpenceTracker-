@@ -1,10 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import {
   getTransactions,
   addTransaction,
   deleteTransaction,
   updateTransaction,
 } from "./operations";
+import { getCurrentUser } from "../user/operations";
 
 const initialState = {
   incomes: [],
@@ -39,11 +40,10 @@ const slice = createSlice({
         }
       })
       .addCase(addTransaction.fulfilled, (state, { payload }) => {
-        console.log(payload);
-        const { transaction, total } = payload;
-
         state.isLoading = false;
         state.isError = false;
+
+        const { transaction, total } = payload;
 
         if (transaction.type === "incomes") {
           state.incomes.push(transaction);
@@ -54,6 +54,9 @@ const slice = createSlice({
         }
       })
       .addCase(deleteTransaction.fulfilled, (state, { payload, meta }) => {
+        state.isLoading = false;
+        state.isError = false;
+
         const { _id, type } = meta.arg;
 
         if (type === "incomes") {
@@ -69,6 +72,9 @@ const slice = createSlice({
         }
       })
       .addCase(updateTransaction.fulfilled, (state, { payload, meta }) => {
+        state.isLoading = false;
+        state.isError = false;
+
         const { _id, type } = meta.arg;
 
         if (type === "incomes") {
@@ -87,16 +93,33 @@ const slice = createSlice({
           state.expensesTotal = payload.total;
         }
       })
+      .addCase(getCurrentUser.fulfilled, (state, { payload }) => {
+        state.incomesTotal = payload.transactionsTotal.incomes;
+        state.expensesTotal = payload.transactionsTotal.expenses;
+      })
 
       .addMatcher(
-        (action) => action.type.endsWith("/pending"),
+        isAnyOf(
+          getTransactions.pending,
+          addTransaction.pending,
+          deleteTransaction.pending,
+          updateTransaction.pending,
+          getCurrentUser.pending
+        ),
         (state) => {
           state.isLoading = true;
           state.isError = false;
         }
       )
+
       .addMatcher(
-        (action) => action.type.endsWith("/rejected"),
+        isAnyOf(
+          getTransactions.rejected,
+          addTransaction.rejected,
+          deleteTransaction.rejected,
+          updateTransaction.rejected,
+          getCurrentUser.rejected
+        ),
         (state) => {
           state.isLoading = false;
           state.isError = true;

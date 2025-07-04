@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { userLogin } from "../../redux/auth/operations";
 import toast from "react-hot-toast";
 import { useCallback } from "react";
@@ -10,19 +10,20 @@ import styles from "./LoginPage.module.css";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleUserLogin = useCallback(
     async (values, actions) => {
-      console.log("mount");
       try {
         await dispatch(userLogin(values)).unwrap();
         toast.success("Welcome back! We've missed you!");
         actions.resetForm();
+        navigate("/transactions/expenses");
       } catch {
         toast.error("Something went wrong! Please try again one more time");
       }
     },
-    [dispatch]
+    [dispatch, navigate]
   );
 
   return (

@@ -1,5 +1,11 @@
 import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { userLogin, userLogout, userRefresh, userRegister } from "./operations";
+import {
+  deleteUserAvatar,
+  getCurrentUser,
+  updateUser,
+  userAvatarChange,
+} from "../user/operations";
 
 const initialState = {
   user: {
@@ -47,27 +53,70 @@ const slice = createSlice({
         state.isError = false;
         state.isRefreshing = false;
         state.tokens = payload;
+        state.isLoggedIn = true;
       })
       .addCase(userRefresh.rejected, (state) => {
         state.isError = true;
         state.isRefreshing = false;
         state.isLoggedIn = false;
+        state.tokens = { accessToken: "", refreshToken: "", sid: "" };
+      })
+      .addCase(getCurrentUser.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isRefreshing = false;
+        state.user.email = payload.email;
+        state.user.name = payload.name;
+        state.user.avatarUrl = payload.avatarUrl;
+        state.user.currency = payload.currency;
+        state.isLoggedIn = true;
+      })
+      .addCase(updateUser.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.user.name = payload.name;
+        state.user.currency = payload.currency;
+      })
+      .addCase(userAvatarChange.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.user.avatarUrl = payload.avatarUrl;
+      })
+      .addCase(deleteUserAvatar.fulfilled, (state) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.user.avatarUrl = "";
       })
 
       .addMatcher(
-        isAnyOf(userLogin.pending, userRegister.pending, userLogout.pending),
+        isAnyOf(
+          userLogin.pending,
+          userRegister.pending,
+          userLogout.pending,
+          getCurrentUser.pending,
+          updateUser.pending,
+          userAvatarChange.pending,
+          deleteUserAvatar.pending
+        ),
         (state) => {
           state.isLoading = true;
           state.isError = false;
-          state.isLoggedIn = false;
         }
       )
+
       .addMatcher(
-        isAnyOf(userLogin.rejected, userRegister.rejected, userLogout.rejected),
+        isAnyOf(
+          userLogin.rejected,
+          userRegister.rejected,
+          userLogout.rejected,
+          getCurrentUser.rejected,
+          updateUser.rejected,
+          userAvatarChange.rejected,
+          deleteUserAvatar.rejected
+        ),
         (state) => {
           state.isLoading = false;
           state.isError = true;
-          state.isLoggedIn = false;
         }
       ),
 });

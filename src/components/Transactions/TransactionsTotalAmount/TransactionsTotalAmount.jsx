@@ -14,11 +14,11 @@ const TransactionsTotalAmount = () => {
     <div className={s.totalAmount}>
       <div>
         <p>Total Income</p>
-        <p>{totalIncome || "00.000"}</p>
+        <p>{totalIncome}</p>
       </div>
       <div>
         <p>Total Expense</p>
-        <p>{totalExpense || "00.000"}</p>
+        <p>{totalExpense}</p>
       </div>
     </div>
   );
