@@ -129,15 +129,19 @@ const CategoriesModal = ({ type, closeModal, setSelectedCategory }) => {
           ))}
         </ul>
 
-        <form onSubmit={handleModalSubmit} className={s.form}>
+        <div className={s.form}>
           <input
+            id="modalInput"
+            name="modalInput"
             type="text"
             placeholder="Enter category name"
             value={newCategoryName}
             onChange={(e) => setNewCategoryName(e.target.value)}
           />
-          <button type="submit">{btnText}</button>
-        </form>
+          <button type="button" onClick={handleModalSubmit}>
+            {btnText}
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -1,14 +1,14 @@
 import { useSelector } from "react-redux";
 import {
-  selectAllExpenses,
-  selectAllIncome,
+  selectTotalExpense,
+  selectTotalIncome,
 } from "../../../redux/transactions/selectors";
 
 import s from "./TransactionsTotalAmount.module.css";
 
-const TransactionsTotalAmount = () => {
-  const totalIncome = useSelector(selectAllIncome);
-  const totalExpense = useSelector(selectAllExpenses);
+const TransactionsTotalAmount = ({ transactionsType }) => {
+  const totalIncome = useSelector(selectTotalIncome);
+  const totalExpense = useSelector(selectTotalExpense);
 
   return (
     <div className={s.totalAmount}>

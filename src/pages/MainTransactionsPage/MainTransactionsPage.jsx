@@ -5,8 +5,7 @@ import TransactionsTotalAmount from "../../components/Transactions/TransactionsT
 import s from "./MainTransactionsPage.module.css";
 
 const MainTransactionsPage = () => {
-  const { type } = useParams();
-  console.log(type);
+  const { transactionsType } = useParams();
 
   return (
     <div className={s.mainTransactions}>
@@ -15,9 +14,9 @@ const MainTransactionsPage = () => {
         Capture and organize every penny spent with ease! A clear view of your
         financial habits at your fingertips.
       </p>
-      <TransactionsTotalAmount transactionType={type} />
-      <TransactionsChart transactionType={type} />
-      <TransactionForm transactionType={type} />
+      <TransactionsTotalAmount transactionsType={transactionsType} />
+      <TransactionsChart transactionsType={transactionsType} />
+      <TransactionForm transactionsType={transactionsType} />
     </div>
   );
 };

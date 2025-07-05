@@ -6,6 +6,8 @@ export const getCurrentUser = createAsyncThunk(
   async (_, { getState, rejectWithValue }) => {
     try {
       const token = getState().auth.tokens.accessToken;
+      if (!token) return rejectWithValue("No token");
+
       setAuthHeader(token);
       const { data } = await api.get("users/current");
       return data;

@@ -13,9 +13,10 @@ import { addTransaction } from "../../../redux/transactions/operations";
 
 import s from "./TransactionForm.module.css";
 
-const TransactionForm = ({ transactionType }) => {
+const TransactionForm = ({ transactionsType }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const categoryInput = useRef();
 
   const [selectedCategory, setSelectedCategory] = useState({
     _id: "",
@@ -23,7 +24,6 @@ const TransactionForm = ({ transactionType }) => {
     categoryName: "",
   });
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
-  const categoryInput = useRef();
 
   const handleModalOpen = (e) => {
     if (e.target === categoryInput.current) setIsFormModalOpen(true);
@@ -31,9 +31,9 @@ const TransactionForm = ({ transactionType }) => {
 
   const handleSubmit = useCallback(
     async (values, actions) => {
+      console.log("submit", values);
       const transaction = {
         ...values,
-        category: selectedCategory._id,
         sum: Number(values.sum),
         type: values.type,
       };
@@ -45,121 +45,138 @@ const TransactionForm = ({ transactionType }) => {
         toast.error("Something went wrong! Please try again one more time");
       }
     },
-    [dispatch, selectedCategory._id]
+    [dispatch]
   );
 
   return (
     <div className={s.formContainer}>
       <Formik
-        initialValues={{ ...transactionValues, type: transactionType }}
+        initialValues={{ ...transactionValues, type: transactionsType }}
         validationSchema={transactionFormSchema}
         onSubmit={handleSubmit}
         enableReinitialize={true}
       >
-        <Form className={s.form}>
-          <div
-            className={s.radioWrapper}
-            role="group"
-            aria-labelledby="transactionTypeGroup"
-          >
-            <label htmlFor="expenses" className={s.radioLabel}>
-              <Field
-                id="expenses"
-                type="radio"
-                name="type"
-                value="expenses"
-                className={s.radioInput}
-                onChange={(e) => navigate(`/transactions/${e.target.value}`)}
+        {({ setFieldValue }) => (
+          <Form className={s.form}>
+            <div
+              className={s.radioWrapper}
+              role="group"
+              aria-labelledby="transactionTypeGroup"
+            >
+              <label htmlFor="expenses" className={s.radioLabel}>
+                <Field
+                  id="expenses"
+                  type="radio"
+                  name="type"
+                  value="expenses"
+                  className={s.radioInput}
+                  onChange={(e) => navigate(`/transactions/${e.target.value}`)}
+                />
+                Expense
+              </label>
+
+              <label htmlFor="incomes" className={s.radioLabel}>
+                <Field
+                  id="incomes"
+                  type="radio"
+                  name="type"
+                  value="incomes"
+                  className={s.radioInput}
+                  onChange={(e) => navigate(`/transactions/${e.target.value}`)}
+                />
+                Income
+              </label>
+            </div>
+
+            <div className={s.dateWrapper}>
+              <DatePickerField
+                label="Date"
+                name="date"
+                id="date"
+                wrapperClassName={s.dateFieldWrapper}
+                labelClassName={s.label}
+                inputClassName={s.dateInput}
+                errorClassName={s.error}
               />
-              Expense
-            </label>
 
-            <label htmlFor="incomes" className={s.radioLabel}>
-              <Field
-                id="incomes"
-                type="radio"
-                name="type"
-                value="incomes"
-                className={s.radioInput}
-                onChange={(e) => navigate(`/transactions/${e.target.value}`)}
+              <label htmlFor="time" className={s.label}>
+                Time
+                <Field id="time" type="time" name="time" className={s.time} />
+              </label>
+              <ErrorMessage className={s.error} name="time" component="div" />
+            </div>
+
+            <div className={s.textInputsWrapper}>
+              <label htmlFor="categoryInput" className={s.label}>
+                Category
+              </label>
+              <input
+                readOnly
+                ref={categoryInput}
+                id="categoryInput"
+                name="categoryInput"
+                placeholder="Select category"
+                type="text"
+                value={selectedCategory.categoryName}
+                className={s.input}
+                onFocus={handleModalOpen}
+                onClick={handleModalOpen}
               />
-              Income
-            </label>
-          </div>
 
-          <div className={s.dateWrapper}>
-            <DatePickerField
-              label="Date"
-              name="date"
-              id="date"
-              wrapperClassName={s.dateFieldWrapper}
-              labelClassName={s.label}
-              inputClassName={s.dateInput}
-              errorClassName={s.error}
-            />
+              <Field
+                type="hidden"
+                name="category"
+                id="category"
+                aria-label="Selected Category ID"
+              />
 
-            <label htmlFor="time" className={s.label}>
-              Time
-              <Field id="time" type="time" name="time" className={s.time} />
-            </label>
-            <ErrorMessage className={s.error} name="time" component="div" />
-          </div>
+              <ErrorMessage
+                className={s.error}
+                name="category"
+                component="div"
+              />
 
-          <div className={s.textInputsWrapper}>
-            <label htmlFor="category" className={s.label}>
-              Category
+              <label htmlFor="sum" className={s.label}>
+                Sum
+              </label>
+              <Field
+                id="sum"
+                name="sum"
+                placeholder="Enter the sum"
+                type="number"
+                className={s.input}
+              />
+              <ErrorMessage className={s.error} name="sum" component="div" />
+            </div>
+
+            <label htmlFor="comment" className={s.label}>
+              Comment
             </label>
             <Field
-              readOnly
-              ref={categoryInput}
-              id="category"
-              name="category"
-              placeholder="Select category"
-              type="text"
-              value={selectedCategory.categoryName}
-              className={s.input}
-              onFocus={handleModalOpen}
-              onClick={handleModalOpen}
+              as="textarea"
+              id="comment"
+              name="comment"
+              placeholder="Enter the text"
+              className={s.textArea}
             />
-
-            <label htmlFor="sum" className={s.label}>
-              Sum
-            </label>
-            <Field
-              id="sum"
-              name="sum"
-              placeholder="Enter the sum"
-              type="number"
-              className={s.input}
-            />
-            <ErrorMessage className={s.error} name="sum" component="div" />
-          </div>
-
-          <label htmlFor="comment" className={s.label}>
-            Comment
-          </label>
-          <Field
-            as="textarea"
-            id="comment"
-            name="comment"
-            placeholder="Enter the text"
-            className={s.textArea}
-          />
-          <ErrorMessage className={s.error} name="comment" component="div" />
-          <button type="submit" className={s.submitButton}>
-            Submit
-          </button>
-        </Form>
+            <ErrorMessage className={s.error} name="comment" component="div" />
+            <button type="submit" className={s.submitButton}>
+              Submit
+            </button>
+            {isFormModalOpen && (
+              <CategoriesModal
+                type={transactionsType}
+                closeModal={() => setIsFormModalOpen(false)}
+                setSelectedCategory={(category) => {
+                  console.log(category);
+                  setSelectedCategory(category);
+                  setFieldValue("category", category._id);
+                }}
+              />
+            )}
+          </Form>
+        )}
       </Formik>
-      {isFormModalOpen && (
-        <CategoriesModal
-          type={transactionType}
-          closeModal={() => setIsFormModalOpen(false)}
-          setSelectedCategory={(category) => {
-            setSelectedCategory(category);
-          }}
-        />
-      )}
     </div>
   );
 };

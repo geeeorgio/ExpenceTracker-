@@ -5,14 +5,18 @@ import TransactionsTotalAmount from "../../components/Transactions/TransactionsT
 import styles from "./TransactionsHistoryPage.module.css";
 
 const TransactionsHistoryPage = () => {
-  const { type } = useParams();
-  console.log(type);
+  const { transactionsType } = useParams();
 
   return (
     <div className={styles.historyPage}>
       TransactionsHistoryPage
-      <h1>All {() => type.charAt(0).toUpperCase + type.slice(1)}</h1>
-      {type === "expences" ? (
+      <h1>
+        All
+        {() =>
+          transactionsType.charAt(0).toUpperCase + transactionsType.slice(1)
+        }
+      </h1>
+      {transactionsType === "expences" ? (
         <p>
           View and manage every transaction seamlessly! Your entire financial
           landscape, all in one place.
@@ -24,8 +28,8 @@ const TransactionsHistoryPage = () => {
         </p>
       )}
       <TransactionsTotalAmount />
-      <TransactionsSearchTools type={type} />
-      <TransactionsList type={type} />
+      <TransactionsSearchTools type={transactionsType} />
+      <TransactionsList type={transactionsType} />
     </div>
   );
 };

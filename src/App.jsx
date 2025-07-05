@@ -2,13 +2,10 @@ import { lazy, useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import SharedLayout from "./components/Shared/SharedLayout/SharedLayout";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  selectAuthSid,
-  selectAuthUserIsLoggedIn,
-} from "./redux/auth/selectors";
 import PublicRoute from "./components/CustomRoutes/PublicRoute";
 import PrivateRoute from "./components/CustomRoutes/PrivateRoute";
-import { userRefresh } from "./redux/auth/operations";
+import { getCurrentUser } from "./redux/user/operations";
+import { selectAuthAccessToken } from "./redux/auth/selectors";
 
 const WelcomePage = lazy(() => import("./pages/WelcomePage/WelcomePage"));
 const RegisterPage = lazy(() => import("./pages/RegisterPage/RegisterPage"));
@@ -22,14 +19,11 @@ const TransactionsHistoryPage = lazy(() =>
 
 function App() {
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector(selectAuthUserIsLoggedIn);
-  const sid = useSelector(selectAuthSid);
+  const checkAuth = useSelector(selectAuthAccessToken);
 
   useEffect(() => {
-    if (!isLoggedIn && sid) {
-      dispatch(userRefresh());
-    }
-  }, [dispatch, sid, isLoggedIn]);
+    if (checkAuth) dispatch(getCurrentUser());
+  }, [dispatch, checkAuth]);
 
   return (
     <SharedLayout>
@@ -59,7 +53,7 @@ function App() {
           }
         />
         <Route
-          path="/transactions/:type"
+          path="/transactions/:transactionsType"
           element={
             <PrivateRoute to="/">
               <MainTransactionsPage />
@@ -67,7 +61,7 @@ function App() {
           }
         />
         <Route
-          path="/transactions/history/:type"
+          path="/transactions/history/:transactionsType"
           element={
             <PrivateRoute to="/">
               <TransactionsHistoryPage />

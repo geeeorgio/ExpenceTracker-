@@ -1,6 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { api, clearAuthHeader, setAuthHeader } from "../../service/api";
-import { getCurrentUser } from "../user/operations";
 
 export const userRegister = createAsyncThunk(
   "auth/register",
@@ -42,23 +41,25 @@ export const userLogout = createAsyncThunk(
   }
 );
 
-export const userRefresh = createAsyncThunk(
-  "auth/refresh",
-  async (_, { dispatch, getState, rejectWithValue }) => {
-    try {
-      const sid = getState().auth.tokens.sid;
-      console.log("sid", sid);
-      if (!sid) return rejectWithValue("No sid");
+// export const userRefresh = createAsyncThunk(
+//   "auth/refresh",
+//   async (_, { dispatch, getState, rejectWithValue }) => {
+//     try {
+//       const sid = getState().auth.tokens.sid;
+//       console.log("sid", sid);
+//       if (!sid) return rejectWithValue("No sid");
 
-      const { data } = await api.post("auth/refresh", { sid });
-      console.log("refresh", data);
-      setAuthHeader(data.accessToken); // обязательно!
-      await dispatch(getCurrentUser());
+//       const { data } = await api.post("auth/refresh", { sid: sid });
+//       console.log("refresh", data);
 
-      return data;
-    } catch (error) {
-      console.error("Refresh failed", error.response?.data || error.message);
-      return rejectWithValue(error.message);
-    }
-  }
-);
+//       setAuthHeader(data.accessToken);
+//       await dispatch(getCurrentUser());
+
+//       return data;
+//     } catch (error) {
+//       console.log("Full error", error.response);
+//       console.error("Refresh failed", error.message);
+//       return rejectWithValue(error.message);
+//     }
+//   }
+// );

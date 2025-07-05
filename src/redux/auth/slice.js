@@ -1,5 +1,5 @@
 import { createSlice, isAnyOf } from "@reduxjs/toolkit";
-import { userLogin, userLogout, userRefresh, userRegister } from "./operations";
+import { userLogin, userLogout, userRegister } from "./operations";
 import {
   deleteUserAvatar,
   getCurrentUser,
@@ -41,25 +41,31 @@ const slice = createSlice({
         state.tokens.refreshToken = payload.refreshToken;
         state.tokens.sid = payload.sid;
         state.isLoggedIn = true;
+        state.isRefreshing = false;
       })
       .addCase(userLogout.fulfilled, () => {
         return { ...initialState };
       })
-      .addCase(userRefresh.pending, (state) => {
+      // .addCase(userRefresh.pending, (state) => {
+      //   state.isError = false;
+      //   state.isRefreshing = true;
+      // })
+      // .addCase(userRefresh.fulfilled, (state, { payload }) => {
+      //   state.isError = false;
+      //   state.isRefreshing = false;
+      //   state.tokens = payload;
+      //   state.isLoggedIn = true;
+      // })
+      // .addCase(userRefresh.rejected, (state) => {
+      //   state.isError = true;
+      //   state.isRefreshing = false;
+      //   state.isLoggedIn = false;
+      //   state.tokens = { accessToken: "", refreshToken: "", sid: "" };
+      // })
+      .addCase(getCurrentUser.pending, (state) => {
+        state.isLoading = true;
         state.isError = false;
         state.isRefreshing = true;
-      })
-      .addCase(userRefresh.fulfilled, (state, { payload }) => {
-        state.isError = false;
-        state.isRefreshing = false;
-        state.tokens = payload;
-        state.isLoggedIn = true;
-      })
-      .addCase(userRefresh.rejected, (state) => {
-        state.isError = true;
-        state.isRefreshing = false;
-        state.isLoggedIn = false;
-        state.tokens = { accessToken: "", refreshToken: "", sid: "" };
       })
       .addCase(getCurrentUser.fulfilled, (state, { payload }) => {
         state.isLoading = false;
@@ -70,6 +76,13 @@ const slice = createSlice({
         state.user.avatarUrl = payload.avatarUrl;
         state.user.currency = payload.currency;
         state.isLoggedIn = true;
+      })
+      .addCase(getCurrentUser.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isRefreshing = false;
+        state.isLoggedIn = false;
+        state.tokens = { accessToken: "", refreshToken: "", sid: "" };
       })
       .addCase(updateUser.fulfilled, (state, { payload }) => {
         state.isLoading = false;
@@ -92,8 +105,32 @@ const slice = createSlice({
         isAnyOf(
           userLogin.pending,
           userRegister.pending,
-          userLogout.pending,
-          getCurrentUser.pending,
+          getCurrentUser.pending
+        ),
+        (state) => {
+          state.isLoading = true;
+          state.isError = false;
+          state.isRefreshing = true;
+        }
+      )
+
+      .addMatcher(
+        isAnyOf(
+          userLogin.fulfilled,
+          userRegister.fulfilled,
+          userLogin.rejected,
+          userRegister.rejected,
+          userLogout.fulfilled,
+          userLogout.rejected
+        ),
+        (state) => {
+          state.isLoading = false;
+          state.isRefreshing = false;
+        }
+      )
+
+      .addMatcher(
+        isAnyOf(
           updateUser.pending,
           userAvatarChange.pending,
           deleteUserAvatar.pending
@@ -103,13 +140,19 @@ const slice = createSlice({
           state.isError = false;
         }
       )
-
       .addMatcher(
         isAnyOf(
-          userLogin.rejected,
-          userRegister.rejected,
-          userLogout.rejected,
-          getCurrentUser.rejected,
+          updateUser.fulfilled,
+          userAvatarChange.fulfilled,
+          deleteUserAvatar.fulfilled
+        ),
+        (state) => {
+          state.isLoading = false;
+          state.isError = false;
+        }
+      )
+      .addMatcher(
+        isAnyOf(
           updateUser.rejected,
           userAvatarChange.rejected,
           deleteUserAvatar.rejected

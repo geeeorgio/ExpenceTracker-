@@ -11,7 +11,9 @@ const PrivateRoute = ({ to = "/", children }) => {
   const isLoggedIn = useSelector(selectAuthUserIsLoggedIn);
   const isRefreshing = useSelector(selectAuthIsRefreshing);
 
-  if (isRefreshing) return <Loader />;
+  if (isRefreshing) {
+    return <Loader />;
+  }
 
   return isLoggedIn ? children : <Navigate to={to} />;
 };

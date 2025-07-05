@@ -93,13 +93,7 @@ export const transactionFormSchema = Yup.object().shape({
     .required("Time is required")
     .matches(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (HH:MM)"),
 
-  category: Yup.string()
-    .required("Category is required")
-    .min(1, "Category cannot be empty")
-    .max(
-      16,
-      "Category length must be less than or equal to 16 characters long"
-    ),
+  category: Yup.string().required("Category is required"),
 
   sum: Yup.number()
     .required("Amount is required")
@@ -115,5 +109,7 @@ export const transactionFormSchema = Yup.object().shape({
       }
     ),
 
-  comment: Yup.string().max(255, "Comment cannot exceed 255 characters"),
+  comment: Yup.string()
+    .min(3, "Comment cannot be less then 3 characters")
+    .max(48, "Comment must be less than or equal to 48 characters long"),
 });

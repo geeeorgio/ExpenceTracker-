@@ -42,15 +42,13 @@ const slice = createSlice({
       .addCase(addTransaction.fulfilled, (state, { payload }) => {
         state.isLoading = false;
         state.isError = false;
-
-        const { transaction, total } = payload;
-
-        if (transaction.type === "incomes") {
-          state.incomes.push(transaction);
-          state.incomesTotal = total;
+        console.log("addTra", payload);
+        if (payload.transaction.type === "incomes") {
+          state.incomes.push(payload.transaction);
+          state.incomesTotal = payload.total;
         } else {
-          state.expenses.push(transaction);
-          state.expensesTotal = total;
+          state.expenses.push(payload.transaction);
+          state.expensesTotal = payload.total;
         }
       })
       .addCase(deleteTransaction.fulfilled, (state, { payload, meta }) => {
