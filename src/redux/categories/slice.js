@@ -6,6 +6,7 @@ import {
   updateCategories,
 } from "./operations";
 import { getCurrentUser } from "../user/operations";
+import { userLogout } from "../auth/operations";
 
 const initialState = {
   categories: {
@@ -73,6 +74,9 @@ const slice = createSlice({
         state.isLoading = false;
         state.categories.incomes = payload.categories.incomes;
         state.categories.expenses = payload.categories.expenses;
+      })
+      .addCase(userLogout.fulfilled, () => {
+        return { ...initialState };
       })
 
       .addMatcher(

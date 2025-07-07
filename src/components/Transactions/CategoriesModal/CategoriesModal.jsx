@@ -1,12 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import {
   addCategories,
   deleteCategory,
   updateCategories,
 } from "../../../redux/categories/operations";
 import { selectCategoriesByType } from "../../../redux/categories/selectors";
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 
 import s from "./CategoriesModal.module.css";
 

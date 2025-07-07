@@ -5,9 +5,7 @@ const THEME_STORAGE_KEY = "user-theme";
 export const useTheme = () => {
   const [theme, setTheme] = useState(() => {
     const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
-    if (storedTheme) {
-      return storedTheme;
-    }
+    if (storedTheme) return storedTheme;
 
     if (
       window.matchMedia &&

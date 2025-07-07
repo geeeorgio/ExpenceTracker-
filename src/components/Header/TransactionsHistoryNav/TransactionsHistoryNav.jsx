@@ -1,15 +1,31 @@
 import { NavLink } from "react-router-dom";
-import styles from "./TransactionsHistoryNav.module.css";
+import s from "./TransactionsHistoryNav.module.css";
 
-const TransactionsHistoryNav = () => {
+const TransactionsHistoryNav = ({ onNavClick }) => {
+  const handleNavClick = () => {
+    if (onNavClick) onNavClick();
+  };
+
   return (
-    <nav className={styles.nav}>
+    <nav className={s.nav}>
       <ul>
         <li>
-          <NavLink to="/transactions/history/expenses">All Expense</NavLink>
+          <NavLink
+            to="/transactions/history/expenses"
+            onClick={handleNavClick}
+            className={({ isActive }) => (isActive ? s.active : "")}
+          >
+            All Expense
+          </NavLink>
         </li>
         <li>
-          <NavLink to="/transactions/history/incomes">All Income</NavLink>
+          <NavLink
+            to="/transactions/history/incomes"
+            onClick={handleNavClick}
+            className={({ isActive }) => (isActive ? s.active : "")}
+          >
+            All Income
+          </NavLink>
         </li>
       </ul>
     </nav>

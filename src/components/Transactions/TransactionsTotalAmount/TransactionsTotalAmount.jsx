@@ -6,7 +6,7 @@ import {
 
 import s from "./TransactionsTotalAmount.module.css";
 
-const TransactionsTotalAmount = ({ transactionsType }) => {
+const TransactionsTotalAmount = () => {
   const totalIncome = useSelector(selectTotalIncome);
   const totalExpense = useSelector(selectTotalExpense);
 

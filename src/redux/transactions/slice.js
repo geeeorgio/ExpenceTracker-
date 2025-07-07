@@ -6,6 +6,7 @@ import {
   updateTransaction,
 } from "./operations";
 import { getCurrentUser } from "../user/operations";
+import { userLogout } from "../auth/operations";
 
 const initialState = {
   incomes: [],
@@ -94,6 +95,9 @@ const slice = createSlice({
       .addCase(getCurrentUser.fulfilled, (state, { payload }) => {
         state.incomesTotal = payload.transactionsTotal.incomes;
         state.expensesTotal = payload.transactionsTotal.expenses;
+      })
+      .addCase(userLogout.fulfilled, () => {
+        return { ...initialState };
       })
 
       .addMatcher(

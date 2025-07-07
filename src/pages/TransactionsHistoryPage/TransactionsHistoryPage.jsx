@@ -12,9 +12,7 @@ const TransactionsHistoryPage = () => {
       TransactionsHistoryPage
       <h1>
         All
-        {() =>
-          transactionsType.charAt(0).toUpperCase + transactionsType.slice(1)
-        }
+        {transactionsType.charAt(0).toUpperCase + transactionsType.slice(1)}
       </h1>
       {transactionsType === "expences" ? (
         <p>
