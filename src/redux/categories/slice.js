@@ -13,7 +13,7 @@ const initialState = {
     incomes: [],
     expenses: [],
   },
-  isError: false,
+  error: null,
   isLoading: false,
 };
 
@@ -23,57 +23,50 @@ const slice = createSlice({
   extraReducers: (builder) =>
     builder
       .addCase(getCategories.fulfilled, (state, { payload }) => {
-        state.isError = false;
-        state.isLoading = false;
         state.categories.incomes = payload.incomes;
         state.categories.expenses = payload.expenses;
       })
       .addCase(addCategories.fulfilled, (state, { payload }) => {
-        const type = payload.type;
-        if (type === "incomes") {
+        if (payload.type === "incomes") {
           state.categories.incomes.push(payload);
-        } else {
+        } else if (payload.type === "expenses") {
           state.categories.expenses.push(payload);
         }
-        state.isError = false;
-        state.isLoading = false;
       })
-      .addCase(deleteCategory.fulfilled, (state, { meta }) => {
-        const _id = meta.arg;
+      .addCase(deleteCategory.fulfilled, (state, { payload }) => {
+        const { _id } = payload;
 
         state.categories.incomes = state.categories.incomes.filter(
           (cat) => cat._id !== _id
         );
-
         state.categories.expenses = state.categories.expenses.filter(
           (cat) => cat._id !== _id
         );
-
-        state.isError = false;
-        state.isLoading = false;
       })
       .addCase(updateCategories.fulfilled, (state, { payload }) => {
-        const updateIn = state.categories.incomes.find(
-          (cat) => cat._id === payload._id
+        const { _id, categoryName } = payload;
+
+        const incomeIndex = state.categories.incomes.findIndex(
+          (cat) => cat._id === _id
         );
-        if (updateIn) {
-          updateIn.categoryName = payload.categoryName;
+        if (incomeIndex !== -1) {
+          state.categories.incomes[incomeIndex].categoryName = categoryName;
         }
 
-        const updateEx = state.categories.expenses.find(
-          (cat) => cat._id === payload._id
+        const expenseIndex = state.categories.expenses.findIndex(
+          (cat) => cat._id === _id
         );
-        if (updateEx) {
-          updateEx.categoryName = payload.categoryName;
+        if (expenseIndex !== -1) {
+          state.categories.expenses[expenseIndex].categoryName = categoryName;
         }
-        state.isError = false;
-        state.isLoading = false;
       })
       .addCase(getCurrentUser.fulfilled, (state, { payload }) => {
-        state.isError = false;
-        state.isLoading = false;
-        state.categories.incomes = payload.categories.incomes;
-        state.categories.expenses = payload.categories.expenses;
+        if (payload.categories) {
+          state.categories.incomes = payload.categories.incomes || [];
+          state.categories.expenses = payload.categories.expenses || [];
+        } else {
+          state.categories = { incomes: [], expenses: [] };
+        }
       })
       .addCase(userLogout.fulfilled, () => {
         return { ...initialState };
@@ -89,7 +82,7 @@ const slice = createSlice({
         ),
         (state) => {
           state.isLoading = true;
-          state.isError = false;
+          state.error = null;
         }
       )
 
@@ -101,9 +94,24 @@ const slice = createSlice({
           updateCategories.rejected,
           getCurrentUser.rejected
         ),
+        (state, action) => {
+          state.isLoading = false;
+          state.error = action.payload;
+        }
+      )
+
+      .addMatcher(
+        isAnyOf(
+          getCategories.fulfilled,
+          addCategories.fulfilled,
+          deleteCategory.fulfilled,
+          updateCategories.fulfilled,
+          getCurrentUser.fulfilled,
+          userLogout.fulfilled
+        ),
         (state) => {
           state.isLoading = false;
-          state.isError = true;
+          state.error = null;
         }
       ),
 });

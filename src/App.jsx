@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import PublicRoute from "./components/CustomRoutes/PublicRoute";
 import PrivateRoute from "./components/CustomRoutes/PrivateRoute";
 import { getCurrentUser } from "./redux/user/operations";
-import { selectAuthAccessToken } from "./redux/auth/selectors";
+import { selectAccessToken } from "./redux/auth/selectors";
 
 const WelcomePage = lazy(() => import("./pages/WelcomePage/WelcomePage"));
 const RegisterPage = lazy(() => import("./pages/RegisterPage/RegisterPage"));
@@ -19,7 +19,7 @@ const TransactionsHistoryPage = lazy(() =>
 
 function App() {
   const dispatch = useDispatch();
-  const checkAuth = useSelector(selectAuthAccessToken);
+  const checkAuth = useSelector(selectAccessToken);
 
   useEffect(() => {
     if (checkAuth) dispatch(getCurrentUser());

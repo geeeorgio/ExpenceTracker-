@@ -6,10 +6,14 @@ export const getCategories = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await api.get("/categories");
-      console.log("getCategories", data);
       return data;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue({
+        message:
+          error.response?.data?.message ||
+          error.message ||
+          "Failed to fetch categories.",
+      });
     }
   }
 );
@@ -19,10 +23,14 @@ export const addCategories = createAsyncThunk(
   async (category, { rejectWithValue }) => {
     try {
       const { data } = await api.post("/categories", category);
-      console.log("addCategories", data);
       return data;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue({
+        message:
+          error.response?.data?.message ||
+          error.message ||
+          "Failed to add category.",
+      });
     }
   }
 );
@@ -31,11 +39,15 @@ export const deleteCategory = createAsyncThunk(
   "categories/delete",
   async (_id, { rejectWithValue }) => {
     try {
-      console.log("deleteTransaction", _id);
-      const { data } = await api.delete(`/categories/${_id}`);
-      console.log("deleteTransaction", data);
+      await api.delete(`/categories/${_id}`);
+      return { _id };
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue({
+        message:
+          error.response?.data?.message ||
+          error.message ||
+          "Failed to delete category.",
+      });
     }
   }
 );
@@ -44,14 +56,18 @@ export const updateCategories = createAsyncThunk(
   "categories/update",
   async (category, { rejectWithValue }) => {
     try {
-      console.log("upt ops cat", category);
       const { data } = await api.patch(`/categories/${category._id}`, {
         categoryName: category.categoryName,
       });
-      console.log("updateCategories", data);
+
       return data;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue({
+        message:
+          error.response?.data?.message ||
+          error.message ||
+          "Failed to update category.",
+      });
     }
   }
 );

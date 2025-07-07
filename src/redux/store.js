@@ -12,15 +12,16 @@ import {
 import storage from "redux-persist/lib/storage";
 import { authReducer } from "./auth/slice";
 import { categoriesReducer } from "./categories/slice";
+import { filterReducer } from "./filter/slice";
 import { transactionsReducer } from "./transactions/slice";
 import { userReducer } from "./user/slice";
-import { filterReducer } from "./filters/slice";
+import { modalReducer } from "./modal/slice";
 
 const persistConfig = {
   key: "auth",
   version: 1,
   storage,
-  whitelist: ["tokens"],
+  whitelist: ["accessToken", "refreshToken", "sid", "isLoggedIn"],
 };
 
 const persistedReducer = persistReducer(persistConfig, authReducer);
@@ -28,10 +29,11 @@ const persistedReducer = persistReducer(persistConfig, authReducer);
 export const store = configureStore({
   reducer: {
     auth: persistedReducer,
+    user: userReducer,
     categories: categoriesReducer,
     transactions: transactionsReducer,
-    user: userReducer,
     filter: filterReducer,
+    modal: modalReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -1,9 +1,32 @@
-export const selectAuthUser = (state) => state.auth.user;
-export const selectAuthUserAvatar = (state) => state.auth.user.avatarUrl;
-export const selectAuthUserCurrency = (state) => state.auth.user.currency;
-export const selectAuthAccessToken = (state) => state.auth.tokens.accessToken;
-export const selectAuthSid = (state) => state.auth.tokens.sid;
-export const selectAuthIsLoading = (state) => state.auth.isLoading;
-export const selectAuthIsError = (state) => state.auth.isError;
-export const selectAuthIsRefreshing = (state) => state.auth.isRefreshing;
-export const selectAuthUserIsLoggedIn = (state) => state.auth.isLoggedIn;
+import { createSelector } from "@reduxjs/toolkit";
+
+const selectAuthState = (state) => state.auth;
+
+export const selectUser = createSelector(
+  [selectAuthState],
+  (authState) => authState.user
+);
+export const selectIsLoggedIn = createSelector(
+  [selectAuthState],
+  (authState) => authState.isLoggedIn
+);
+export const selectAuthLoading = createSelector(
+  [selectAuthState],
+  (authState) => authState.isLoading
+);
+export const selectAuthError = createSelector(
+  [selectAuthState],
+  (authState) => authState.error
+);
+export const selectAccessToken = createSelector(
+  [selectAuthState],
+  (authState) => authState.accessToken
+);
+export const selectRefreshToken = createSelector(
+  [selectAuthState],
+  (authState) => authState.refreshToken
+);
+export const selectSid = createSelector(
+  [selectAuthState],
+  (authState) => authState.sid
+);

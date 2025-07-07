@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { selectAuthUserIsLoggedIn } from "../../redux/auth/selectors";
+import { selectIsLoggedIn } from "../../redux/auth/selectors";
 import { useTheme } from "../../hooks/userTheme";
 import Logo from "./Logo/Logo";
 import TransactionsHistoryNav from "./TransactionsHistoryNav/TransactionsHistoryNav";
@@ -11,7 +11,7 @@ import BurgerMenu from "./Mobile/BurgerMenu/BurgerMenu";
 import s from "./Header.module.css";
 
 const Header = () => {
-  const isLoggedIn = useSelector(selectAuthUserIsLoggedIn);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
   const [currentTheme, _] = useTheme();
   const [isMobile, setIsMobile] = useState(false);
   const [isBurgerMenuOpen, setIsBurgerMenuOpen] = useState(false);

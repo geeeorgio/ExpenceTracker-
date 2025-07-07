@@ -1,8 +1,8 @@
 import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import {
-  getTransactions,
   addTransaction,
   deleteTransaction,
+  getTransactions,
   updateTransaction,
 } from "./operations";
 import { getCurrentUser } from "../user/operations";
@@ -11,85 +11,64 @@ import { userLogout } from "../auth/operations";
 const initialState = {
   incomes: [],
   expenses: [],
-  incomesTotal: null,
-  expensesTotal: null,
   isLoading: false,
-  isError: false,
+  error: null,
+  incomesTotal: 0,
+  expensesTotal: 0,
 };
 
-const slice = createSlice({
+const transactionsSlice = createSlice({
   name: "transactions",
   initialState,
   extraReducers: (builder) =>
     builder
       .addCase(getTransactions.fulfilled, (state, { payload, meta }) => {
-        state.isLoading = false;
-        state.isError = false;
-
-        if (meta.arg === "incomes") {
-          state.incomes = payload;
-          state.incomesTotal = payload.reduce(
-            (acc, transaction) => acc + transaction.sum,
-            0
-          );
-        } else {
-          state.expenses = payload;
-          state.expensesTotal = payload.reduce(
-            (acc, transaction) => acc + transaction.sum,
-            0
-          );
+        if (Array.isArray(payload)) {
+          if (meta.arg === "incomes") {
+            state.incomes = payload;
+          } else if (meta.arg === "expenses") {
+            state.expenses = payload;
+          }
         }
+      })
+      .addCase(deleteTransaction.fulfilled, (state, { payload }) => {
+        state.incomes = state.incomes.filter(
+          (transaction) => transaction._id !== payload.id
+        );
+        state.expenses = state.expenses.filter(
+          (transaction) => transaction._id !== payload.id
+        );
       })
       .addCase(addTransaction.fulfilled, (state, { payload }) => {
-        state.isLoading = false;
-        state.isError = false;
-        console.log("addTra", payload);
-        if (payload.transaction.type === "incomes") {
-          state.incomes.push(payload.transaction);
-          state.incomesTotal = payload.total;
-        } else {
-          state.expenses.push(payload.transaction);
-          state.expensesTotal = payload.total;
+        const { transaction, total } = payload;
+        if (transaction.type === "incomes") {
+          state.incomes.push(transaction);
+          state.incomesTotal = total;
+        } else if (transaction.type === "expenses") {
+          state.expenses.push(transaction);
+          state.expensesTotal = total;
         }
       })
-      .addCase(deleteTransaction.fulfilled, (state, { payload, meta }) => {
-        state.isLoading = false;
-        state.isError = false;
-
-        const { _id, type } = meta.arg;
-
-        if (type === "incomes") {
-          state.incomes = state.incomes.filter(
-            (transaction) => transaction._id !== _id
-          );
-          state.incomesTotal = payload.total;
-        } else {
-          state.expenses = state.expenses.filter(
-            (transaction) => transaction._id !== _id
-          );
-          state.expensesTotal = payload.total;
-        }
-      })
-      .addCase(updateTransaction.fulfilled, (state, { payload, meta }) => {
-        state.isLoading = false;
-        state.isError = false;
-
-        const { _id, type } = meta.arg;
+      .addCase(updateTransaction.fulfilled, (state, { payload }) => {
+        const {
+          id,
+          type,
+          transaction: updatedTransaction,
+          total: newTotal,
+        } = payload;
 
         if (type === "incomes") {
-          state.incomes = state.incomes.map((transaction) =>
-            transaction._id === _id
-              ? { ...transaction, ...payload.transaction }
-              : transaction
-          );
-          state.incomesTotal = payload.total;
-        } else {
-          state.expenses = state.expenses.map((transaction) =>
-            transaction._id === _id
-              ? { ...transaction, ...payload.transaction }
-              : transaction
-          );
-          state.expensesTotal = payload.total;
+          const index = state.incomes.findIndex((tra) => tra._id === id);
+          if (index !== -1) {
+            state.incomes[index] = updatedTransaction;
+          }
+          state.incomesTotal = newTotal;
+        } else if (type === "expenses") {
+          const index = state.expenses.findIndex((tra) => tra._id === id);
+          if (index !== -1) {
+            state.expenses[index] = updatedTransaction;
+          }
+          state.expensesTotal = newTotal;
         }
       })
       .addCase(getCurrentUser.fulfilled, (state, { payload }) => {
@@ -105,12 +84,11 @@ const slice = createSlice({
           getTransactions.pending,
           addTransaction.pending,
           deleteTransaction.pending,
-          updateTransaction.pending,
-          getCurrentUser.pending
+          updateTransaction.pending
         ),
         (state) => {
           state.isLoading = true;
-          state.isError = false;
+          state.error = null;
         }
       )
 
@@ -119,14 +97,27 @@ const slice = createSlice({
           getTransactions.rejected,
           addTransaction.rejected,
           deleteTransaction.rejected,
-          updateTransaction.rejected,
-          getCurrentUser.rejected
+          updateTransaction.rejected
+        ),
+        (state, action) => {
+          state.isLoading = false;
+          state.error = action.payload;
+        }
+      )
+
+      .addMatcher(
+        isAnyOf(
+          getTransactions.fulfilled,
+          addTransaction.fulfilled,
+          deleteTransaction.fulfilled,
+          updateTransaction.fulfilled,
+          userLogout.fulfilled
         ),
         (state) => {
           state.isLoading = false;
-          state.isError = true;
+          state.error = null;
         }
       ),
 });
 
-export const transactionsReducer = slice.reducer;
+export const transactionsReducer = transactionsSlice.reducer;

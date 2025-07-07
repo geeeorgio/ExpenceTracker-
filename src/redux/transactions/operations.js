@@ -5,57 +5,69 @@ export const getTransactions = createAsyncThunk(
   "transactions/all",
   async (type, { rejectWithValue }) => {
     try {
-      const { data } = await api.get(`/transactions/${type}`);
-      console.log("getTrans", data);
+      const { data } = await api.get(`transactions/${type}`);
       return data;
     } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const addTransaction = createAsyncThunk(
-  "transactions/add",
-  async (transaction, { rejectWithValue }) => {
-    try {
-      console.log("addTransaction", transaction);
-      const { data } = await api.post("/transactions", transaction);
-      console.log(data);
-      return data;
-    } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue({
+        message:
+          error.response?.data?.message ||
+          error.message ||
+          "Failed to fetch transactions.",
+      });
     }
   }
 );
 
 export const deleteTransaction = createAsyncThunk(
   "transactions/delete",
-  async (transaction, { rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     try {
-      const { data } = await api.post(
-        `/transactions/${transaction.type}`,
-        transaction.id
-      );
-      console.log("deleteTrans", data);
+      const { data } = await api.delete(`transactions/${id}`);
+      return { id, total: data.total };
+    } catch (error) {
+      return rejectWithValue({
+        message:
+          error.response?.data?.message ||
+          error.message ||
+          "Failed to delete transaction.",
+      });
+    }
+  }
+);
+
+export const addTransaction = createAsyncThunk(
+  "transactions/add",
+  async (transactionData, { rejectWithValue }) => {
+    try {
+      const { data } = await api.post("/transactions", transactionData);
       return data;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue({
+        message:
+          error.response?.data?.message ||
+          error.message ||
+          "Failed to add transaction.",
+      });
     }
   }
 );
 
 export const updateTransaction = createAsyncThunk(
   "transactions/update",
-  async (transaction, { rejectWithValue }) => {
+  async ({ id, type, transactionData }, { rejectWithValue }) => {
     try {
       const { data } = await api.patch(
-        `/transactions/${transaction.type}/${transaction.id}`,
-        transaction.id
+        `/transactions/${type}/${id}`,
+        transactionData
       );
-      console.log("uptTrans", data);
-      return data;
+      return { id, type, transaction: data.transaction, total: data.total };
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue({
+        message:
+          error.response?.data?.message ||
+          error.message ||
+          "Failed to update transaction.",
+      });
     }
   }
 );

@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectAuthUser } from "../../../redux/auth/selectors";
+import { selectUser } from "../../../redux/auth/selectors";
 import { updateUser, deleteUserAvatar } from "../../../redux/user/operations";
 import s from "./UserSetsModal.module.css";
 
 const UserSetsModal = ({ onClose }) => {
-  const user = useSelector(selectAuthUser);
+  const user = useSelector(selectUser);
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     name: "",

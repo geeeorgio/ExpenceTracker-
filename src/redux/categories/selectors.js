@@ -4,18 +4,18 @@ const selectCategoriesState = (state) => state.categories;
 
 export const selectIncomes = createSelector(
   [selectCategoriesState],
-  (categories) => categories.incomes
+  (categories) => categories.categories.incomes
 );
 
 export const selectExpenses = createSelector(
   [selectCategoriesState],
-  (categories) => categories.expenses
+  (categories) => categories.categories.expenses
 );
 
 export const selectCategoriesByType = (type) =>
   createSelector(
     [selectCategoriesState],
-    (categories) => categories.categories[type] ?? []
+    (categoriesState) => categoriesState.categories[type] ?? []
   );
 
 export const selectCategoryById = (_id) =>

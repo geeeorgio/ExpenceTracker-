@@ -10,7 +10,7 @@ import { userLogout } from "../auth/operations";
 const initialState = {
   user: null,
   isLoading: false,
-  isError: false,
+  error: null,
 };
 
 const slice = createSlice({
@@ -19,24 +19,24 @@ const slice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getCurrentUser.fulfilled, (state, { payload }) => {
-        state.isLoading = false;
-        state.isError = false;
         state.user = payload;
       })
       .addCase(updateUser.fulfilled, (state, { payload }) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.user = { ...state.user, ...payload };
+        if (state.user) {
+          state.user = { ...state.user, ...payload };
+        } else {
+          state.user = payload;
+        }
       })
       .addCase(userAvatarChange.fulfilled, (state, { payload }) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.user = { ...state.user, avatarUrl: payload.avatarUrl };
+        if (state.user) {
+          state.user.avatarUrl = payload.avatarUrl;
+        }
       })
       .addCase(deleteUserAvatar.fulfilled, (state) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.user = { ...state.user, avatarUrl: null };
+        if (state.user) {
+          state.user.avatarUrl = null;
+        }
       })
       .addCase(userLogout.fulfilled, () => {
         return { ...initialState };
@@ -51,7 +51,7 @@ const slice = createSlice({
         ),
         (state) => {
           state.isLoading = true;
-          state.isError = false;
+          state.error = null;
         }
       )
 
@@ -60,11 +60,29 @@ const slice = createSlice({
           getCurrentUser.rejected,
           updateUser.rejected,
           userAvatarChange.rejected,
-          deleteUserAvatar.rejected
+          deleteUserAvatar.rejected,
+          userLogout.rejected
+        ),
+        (state, action) => {
+          state.isLoading = false;
+          state.error = action.payload;
+          if (action.type === getCurrentUser.rejected.type) {
+            return { ...initialState };
+          }
+        }
+      )
+
+      .addMatcher(
+        isAnyOf(
+          getCurrentUser.fulfilled,
+          updateUser.fulfilled,
+          userAvatarChange.fulfilled,
+          deleteUserAvatar.fulfilled,
+          userLogout.fulfilled
         ),
         (state) => {
           state.isLoading = false;
-          state.isError = true;
+          state.error = null;
         }
       );
   },

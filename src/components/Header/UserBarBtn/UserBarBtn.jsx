@@ -1,13 +1,13 @@
 import { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
-import { selectAuthUser } from "../../../redux/auth/selectors";
+import { selectUser } from "../../../redux/auth/selectors";
 import UserPanel from "../UserPanel/UserPanel";
 
 import s from "./UserBarBtn.module.css";
 
 const UserBarBtn = () => {
   const [userPanelIsOpen, setUserPanelIsOpen] = useState(false);
-  const user = useSelector(selectAuthUser);
+  const user = useSelector(selectUser);
 
   const toggleUserPanelMode = useCallback(
     () =>
